@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class Volume(
     val id: String,
     val volumeInfo: VolumeInfo,
-    val saleInfo: VolumeSaleInfo,
+    val saleInfo: VolumeSaleInfo? = null,
 )

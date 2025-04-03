@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class VolumeSaleInfo(
-    val listPrice: VolumePrice,
-    val retailPrice: VolumePrice,
+    val listPrice: VolumePrice? = null,
+    val retailPrice: VolumePrice? = null,
 )

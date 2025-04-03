@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class VolumePrice(
-    val amount: Float,
+    val amount: Double,
     val currencyCode: String,
 )
