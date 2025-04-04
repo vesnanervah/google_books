@@ -43,6 +43,7 @@ android {
 dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation (libs.retrofit)
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
