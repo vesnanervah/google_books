@@ -6,6 +6,8 @@ data class AppUiState(
     val selectedVolume: Volume? = null,
     var booksListScreenState: ScreenState = ScreenState.Loading,
     var bookDetailsScreenState: ScreenState = ScreenState.Loading,
+    var booksList: List<Volume> = emptyList(),
+    var selectedBooks: Volume? = null,
 )
 
 
