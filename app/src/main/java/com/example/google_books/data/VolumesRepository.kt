@@ -6,6 +6,7 @@ import com.example.google_books.model.VolumeInfo
 import com.example.google_books.model.VolumePrice
 import com.example.google_books.model.VolumeSaleInfo
 import com.example.google_books.network.GoogleBooksApiService
+import kotlinx.coroutines.delay
 
 interface VolumesRepository {
     suspend fun getVolumes(searchQuery: String): List<Volume>
@@ -27,22 +28,30 @@ class NetworkVolumesRepository(private val apiService: GoogleBooksApiService): V
 
 class MockVolumesRepository: VolumesRepository {
     override suspend fun getVolumes(searchQuery: String): List<Volume> {
+        delay(2000)
         return buildList(10) {
-            Volume(
-                "_ojXNuzgHRcC",
-                VolumeInfo(
-                    "Flowers",
-                    listOf("Vijaya Khisty Bodach"),
-                    imageLinks = VolumeImageLinks(
-                        thumbnail = "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
-                    )
-                )
-            )
+            mockListItemVolume
         }
     }
 
     override suspend fun getVolumeDetailsById(volumeId: Int): Volume {
-        return Volume(
+        delay(2000)
+        return mockDetailedVolume
+    }
+
+    companion object {
+        val mockListItemVolume = Volume(
+            "_ojXNuzgHRcC",
+            VolumeInfo(
+                "Flowers",
+                listOf("Vijaya Khisty Bodach"),
+                imageLinks = VolumeImageLinks(
+                    thumbnail = "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+                )
+            )
+        )
+
+        val mockDetailedVolume = Volume(
             "_ojXNuzgHRcC",
             VolumeInfo(
                 "Flowers",
@@ -56,7 +65,7 @@ class MockVolumesRepository: VolumesRepository {
                 VolumeImageLinks(
                     "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
                     "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=2&edge=curl&source=gbs_api",
-                     "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=3&edge=curl&source=gbs_api",
+                    "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=3&edge=curl&source=gbs_api",
                     "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=4&edge=curl&source=gbs_api",
                 ),
                 207,
@@ -69,6 +78,5 @@ class MockVolumesRepository: VolumesRepository {
             )
         )
     }
-
 }
 
