@@ -11,11 +11,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.google_books.ui.screens.BooksListPage
 
 enum class GoogleBooksAppScreen {
     BooksList, BooksDetails
@@ -29,7 +33,9 @@ fun GoogleBooksApp() {
         backstackEntry?.destination?.route ?: GoogleBooksAppScreen.BooksList.name
     )
 
+//    val viewModel: AppViewModel = viewModel(factory = AppViewModel.Factory)
     val viewModel: AppViewModel = viewModel()
+
 
     Scaffold(
         topBar = {
@@ -39,7 +45,25 @@ fun GoogleBooksApp() {
         }
     ) {
         innerPadding -> Surface(Modifier.padding(innerPadding)) {
+            val uiState = viewModel.uiState.collectAsState()
+            NavHost(
+                navController,
+                currentScreen.name,
+                Modifier.padding(innerPadding)
+            ) {
 
+                composable(GoogleBooksAppScreen.BooksList.name){
+                    BooksListPage(uiState.value.booksList) {
+
+                    }
+                }
+
+                composable(GoogleBooksAppScreen.BooksDetails.name){
+                    BooksListPage(uiState.value.booksList) {
+
+                    }
+                }
+            }
         }
     }
 }
