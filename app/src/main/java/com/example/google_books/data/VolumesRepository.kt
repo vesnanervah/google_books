@@ -28,7 +28,7 @@ class NetworkVolumesRepository(private val apiService: GoogleBooksApiService): V
 
 class MockVolumesRepository: VolumesRepository {
     override suspend fun getVolumes(searchQuery: String): List<Volume> {
-        delay(2000)
+        delay(5000)
         return buildList(10) {
             mockListItemVolume
         }

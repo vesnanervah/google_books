@@ -20,14 +20,31 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.example.google_books.R
 import com.example.google_books.model.Volume
+import com.example.google_books.ui.ScreenState
+import com.example.google_books.ui.common.ScreenStateResolverWidget
 
 @Composable
-fun BooksListPage(books: List<Volume>, modifier: Modifier = Modifier, onBookTap: (Volume) -> Unit) {
-    LazyVerticalGrid(GridCells.Adaptive(150.dp)) {
-        items(books) {
-            BooksListItem(it, Modifier.clickable {
-                onBookTap(it)
-            })
+fun BooksListPage(
+        books: List<Volume>,
+        screenState: ScreenState,
+        modifier: Modifier = Modifier,
+        onLoadRetry: () -> Unit,
+        onBookTap: (Volume) -> Unit,
+        ) {
+    ScreenStateResolverWidget(
+        screenState,
+        onLoadRetry,
+    ) {
+        if (books.isEmpty()) {
+            Text("There is no books")
+        } else {
+            LazyVerticalGrid(GridCells.Adaptive(150.dp)) {
+                items(books) {
+                    BooksListItem(it, Modifier.clickable {
+                        onBookTap(it)
+                    })
+                }
+            }
         }
     }
 }

@@ -26,7 +26,7 @@ class AppViewModel(): ViewModel() {
 
 //
 //    // TODO: pass query string
-    private fun getBooksList() {
+    public fun getBooksList() {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(

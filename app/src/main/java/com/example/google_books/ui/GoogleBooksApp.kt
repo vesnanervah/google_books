@@ -1,5 +1,6 @@
 package com.example.google_books.ui
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -53,15 +54,17 @@ fun GoogleBooksApp() {
             ) {
 
                 composable(GoogleBooksAppScreen.BooksList.name){
-                    BooksListPage(uiState.value.booksList) {
+                    BooksListPage(
+                        uiState.value.booksList,
+                        uiState.value.booksListScreenState,
+                        Modifier.fillMaxSize(),
+                        { viewModel.getBooksList() }) {
 
                     }
                 }
 
                 composable(GoogleBooksAppScreen.BooksDetails.name){
-                    BooksListPage(uiState.value.booksList) {
 
-                    }
                 }
             }
         }
