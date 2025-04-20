@@ -50,7 +50,6 @@ fun GoogleBooksApp() {
             NavHost(
                 navController,
                 currentScreen.name,
-                Modifier.padding(innerPadding)
             ) {
 
                 composable(GoogleBooksAppScreen.BooksList.name){
