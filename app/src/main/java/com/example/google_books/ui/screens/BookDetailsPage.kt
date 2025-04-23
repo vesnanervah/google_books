@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -26,6 +28,7 @@ import com.example.google_books.model.Volume
 import com.example.google_books.ui.ScreenState
 import com.example.google_books.ui.common.BookAuthorsWidget
 import com.example.google_books.ui.common.ScreenStateResolverWidget
+import com.example.google_books.ui.theme.cardColors
 
 @Composable
 fun BookDetailsPage(
@@ -51,19 +54,19 @@ fun BookDetailsPage(
                 )
             }
             Spacer(Modifier.padding(8.dp))
-            Card(Modifier.fillMaxSize()) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(book.volumeInfo.title, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onPrimary)
-                        Spacer(Modifier.padding(4.dp))
+            Card(Modifier.fillMaxSize(), colors = cardColors) {
+                Column(Modifier.padding(16.dp)) {
+                    Row(verticalAlignment = Alignment.Bottom) {
+                        Text(book.volumeInfo.title, style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onPrimary)
                         if (book.volumeInfo.publishedDate != null) {
-                            Text(book.volumeInfo.publishedDate, style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Cursive), color = MaterialTheme.colorScheme.onPrimary)
+                            Text(book.volumeInfo.publishedDate, Modifier.padding(start = 10.dp, bottom = 3.dp), style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Cursive), color = MaterialTheme.colorScheme.onPrimary)
                         }
                     }
                     BookAuthorsWidget(book.volumeInfo.authors, Modifier.padding(vertical = 4.dp))
                     if (book.volumeInfo.description != null) {
                         Text(book.volumeInfo.description, Modifier.padding(vertical = 4.dp), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onPrimary)
                     }
-
+                }
             }
         }
     }
