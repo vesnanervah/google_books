@@ -1,5 +1,6 @@
 package com.example.google_books.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -31,7 +32,8 @@ enum class GoogleBooksAppScreen {
 @Composable
 fun GoogleBooksApp(
     viewModel: AppViewModel = viewModel(),
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    finishApplication: () -> Unit,
 ) {
     val backstackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = GoogleBooksAppScreen.valueOf(
@@ -42,8 +44,8 @@ fun GoogleBooksApp(
 
     Scaffold(
         topBar = {
-            GoogleBooksAppTopBar(canNavigateBack = currentScreen == GoogleBooksAppScreen.BooksDetails) {
-
+            GoogleBooksAppTopBar(canNavigateUp = currentScreen == GoogleBooksAppScreen.BooksDetails, finishApplication = finishApplication) {
+                navController.navigate(GoogleBooksAppScreen.BooksList.name)
             }
         }
     ) {
@@ -83,13 +85,21 @@ fun GoogleBooksApp(
 @Composable
 fun GoogleBooksAppTopBar(
     title: String = "Sample text",
-    canNavigateBack: Boolean,
-    navigateUp: () -> Unit
+    finishApplication: () -> Unit,
+    canNavigateUp: Boolean,
+    navigateUp: () -> Unit,
 ) {
+    BackHandler {
+        if (canNavigateUp) {
+            navigateUp()
+        } else {
+            finishApplication()
+        }
+    }
     TopAppBar(
         title = { Text(title) },
         navigationIcon = {
-            if (canNavigateBack)
+            if (canNavigateUp)
                 IconButton(onClick = navigateUp) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,

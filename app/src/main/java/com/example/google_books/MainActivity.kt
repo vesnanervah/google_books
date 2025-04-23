@@ -13,7 +13,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AppTheme {
-                GoogleBooksApp()
+                GoogleBooksApp() {
+                    this.finish()
+                }
             }
         }
     }
