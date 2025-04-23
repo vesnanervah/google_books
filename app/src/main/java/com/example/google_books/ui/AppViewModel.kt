@@ -24,30 +24,58 @@ class AppViewModel(): ViewModel() {
         getBooksList()
     }
 
-//
 //    // TODO: pass query string
      fun getBooksList() {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    booksListScreenState = ScreenState.Loading
-                )
+         loadData(
+             {
+                 _uiState.update {
+                     it.copy(booksListScreenState = ScreenState.Loading)
+                 }
+             },
+             {
+                 val result: List<Volume> = volumesRepository.getVolumes("");
+                 _uiState.update {
+                     it.copy(booksListScreenState = ScreenState.Success, booksList = result)
+                 }
+             },
+             {
+                 _uiState.update {
+                     it.copy(booksListScreenState = ScreenState.Error, booksList = emptyList(),
+                     )
+                 }
+             }
+         )
+    }
+
+    fun selectBook(book: Volume) {
+        _uiState.update { it.copy(bookDetails =  book) }
+        getBookDetails(book.id)
+    }
+
+    fun getBookDetails(bookId: String) {
+        loadData(
+            {
+                _uiState.update { it.copy( bookDetailsScreenState = ScreenState.Loading) }
+            },
+            {
+                val result = volumesRepository.getVolumeDetailsById(bookId)
+                _uiState.update {
+                    it.copy(bookDetails = result, bookDetailsScreenState = ScreenState.Success)
+                }
+            },
+            {
+                _uiState.update { it.copy(bookDetailsScreenState = ScreenState.Error) }
             }
+        )
+    }
+
+    private fun loadData(beforeLoadCb: () -> Unit, loadImpl: suspend () -> Unit, onErrorCb: () -> Unit) {
+        viewModelScope.launch {
+            beforeLoadCb()
             try {
-                val result: List<Volume> = volumesRepository.getVolumes("");
-                _uiState.update {
-                    it.copy(
-                        booksListScreenState = ScreenState.Success,
-                        booksList = result
-                    )
-                }
+                loadImpl()
             } catch (e: Exception) {
-                _uiState.update {
-                    it.copy(
-                        booksListScreenState = ScreenState.Error,
-                        booksList = emptyList(),
-                    )
-                }
+                onErrorCb()
             }
         }
     }

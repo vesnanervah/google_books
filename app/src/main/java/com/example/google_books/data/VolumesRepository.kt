@@ -11,7 +11,7 @@ import kotlinx.coroutines.delay
 interface VolumesRepository {
     suspend fun getVolumes(searchQuery: String): List<Volume>
 
-    suspend fun getVolumeDetailsById(volumeId: Int): Volume
+    suspend fun getVolumeDetailsById(volumeId: String): Volume
 }
 
 class NetworkVolumesRepository(private val apiService: GoogleBooksApiService): VolumesRepository {
@@ -19,7 +19,7 @@ class NetworkVolumesRepository(private val apiService: GoogleBooksApiService): V
         TODO("Not yet implemented")
     }
 
-    override suspend fun getVolumeDetailsById(volumeId: Int): Volume {
+    override suspend fun getVolumeDetailsById(volumeId: String): Volume {
         TODO("Not yet implemented")
     }
 
@@ -41,7 +41,7 @@ class MockVolumesRepository: VolumesRepository {
         )
     }
 
-    override suspend fun getVolumeDetailsById(volumeId: Int): Volume {
+    override suspend fun getVolumeDetailsById(volumeId: String): Volume {
         delay(5000)
         return mockDetailedVolume
     }

@@ -19,6 +19,10 @@ val Typography = Typography(
     bodyMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontSize = 14.sp,
+    ),
+    bodySmall = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontSize = 12.sp,
     )
     /* Other default text styles to override
     titleLarge = TextStyle(

@@ -21,6 +21,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.google_books.ui.screens.BookDetailsPage
 import com.example.google_books.ui.screens.BooksListPage
 
 enum class GoogleBooksAppScreen {
@@ -58,13 +59,20 @@ fun GoogleBooksApp(
                         uiState.value.booksList,
                         uiState.value.booksListScreenState,
                         Modifier.fillMaxSize(),
-                        { viewModel.getBooksList() }) {
-
+                        { viewModel.getBooksList() }
+                    ) {
+                        viewModel.selectBook(it)
+                        navController.navigate(GoogleBooksAppScreen.BooksDetails.name)
                     }
                 }
 
                 composable(GoogleBooksAppScreen.BooksDetails.name){
-
+                    BookDetailsPage(uiState.value.bookDetails, uiState.value.bookDetailsScreenState) {
+                        val id = uiState.value.bookDetails?.id;
+                        if (id!= null) {
+                            viewModel.getBookDetails(id)
+                        }
+                    }
                 }
             }
         }
