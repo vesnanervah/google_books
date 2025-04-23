@@ -16,6 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -27,16 +28,16 @@ enum class GoogleBooksAppScreen {
 }
 
 @Composable
-fun GoogleBooksApp() {
-    val navController = rememberNavController()
+fun GoogleBooksApp(
+    viewModel: AppViewModel = viewModel(),
+    navController: NavHostController = rememberNavController()
+) {
     val backstackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = GoogleBooksAppScreen.valueOf(
         backstackEntry?.destination?.route ?: GoogleBooksAppScreen.BooksList.name
     )
 
 //    val viewModel: AppViewModel = viewModel(factory = AppViewModel.Factory)
-    val viewModel: AppViewModel = viewModel()
-
 
     Scaffold(
         topBar = {
