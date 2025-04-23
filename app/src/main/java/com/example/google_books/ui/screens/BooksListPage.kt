@@ -24,6 +24,7 @@ import coil3.compose.AsyncImage
 import com.example.google_books.R
 import com.example.google_books.model.Volume
 import com.example.google_books.ui.ScreenState
+import com.example.google_books.ui.common.BookAuthorsWidget
 import com.example.google_books.ui.common.ScreenStateResolverWidget
 
 @Composable
@@ -61,10 +62,10 @@ private fun BooksListItem(book: Volume, modifier: Modifier = Modifier, onBookTap
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
-            Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.primary.copy(0.5F)).padding(8.dp)) {
+            Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.primary.copy(0.65F)).padding(8.dp)) {
                 Text(book.volumeInfo.title, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onPrimary)
-                Spacer(Modifier.padding(4.dp))
-                if(book.volumeInfo.authors?.isNotEmpty() == true) Text(book.volumeInfo.authors.joinToString(", "), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onPrimary)
+                Spacer(Modifier.padding(top = 4.dp))
+                BookAuthorsWidget(book.volumeInfo.authors)
             }
         }
     }
