@@ -15,12 +15,15 @@ interface VolumesRepository {
 }
 
 class NetworkVolumesRepository(private val apiService: GoogleBooksApiService): VolumesRepository {
+
+    private val apiKey: String = "";
+
     override suspend fun getVolumes(searchQuery: String): List<Volume> {
-        TODO("Not yet implemented")
+        return apiService.searchVolumes(searchQuery, apiKey).items
     }
 
     override suspend fun getVolumeDetailsById(volumeId: String): Volume {
-        TODO("Not yet implemented")
+        return apiService.searchVolume(volumeId, apiKey)
     }
 
 

@@ -9,7 +9,6 @@ class GoogleBooksApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
-        // TODO: replace with network container after ui complete
         container = MockAppContainer()
     }
 }

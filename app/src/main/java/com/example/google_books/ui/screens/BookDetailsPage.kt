@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -49,7 +50,9 @@ fun BookDetailsPage(
                 AsyncImage(
                     model = book.volumeInfo.imageLinks.large ?: book.volumeInfo.imageLinks.medium,
                     contentDescription = "",
-                    modifier = Modifier.fillMaxWidth().aspectRatio(1f),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f),
                     contentScale = ContentScale.Crop
                 )
             }
@@ -63,14 +66,23 @@ fun BookDetailsPage(
                         }
                     }
                     BookAuthorsWidget(book.volumeInfo.authors, Modifier.padding(vertical = 4.dp))
+                    if (book.volumeInfo.averageRating != null) {
+                        BookCardSecondaryInfoText("Rating: ${book.volumeInfo.averageRating}")
+                    }
                     if (book.volumeInfo.description != null) {
-                        Text(book.volumeInfo.description, Modifier.padding(vertical = 4.dp), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onPrimary)
+                        BookCardSecondaryInfoText(book.volumeInfo.description)
                     }
                 }
             }
         }
     }
 }
+
+@Composable
+private fun BookCardSecondaryInfoText(text: String) {
+    Text(text, Modifier.padding(4.dp), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onPrimary)
+}
+
 
 @Preview
 @Composable

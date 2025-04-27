@@ -31,7 +31,7 @@ enum class GoogleBooksAppScreen {
 
 @Composable
 fun GoogleBooksApp(
-    viewModel: AppViewModel = viewModel(),
+    viewModel: AppViewModel = viewModel(factory = AppViewModel.Factory),
     navController: NavHostController = rememberNavController(),
     finishApplication: () -> Unit,
 ) {
@@ -39,8 +39,6 @@ fun GoogleBooksApp(
     val currentScreen = GoogleBooksAppScreen.valueOf(
         backstackEntry?.destination?.route ?: GoogleBooksAppScreen.BooksList.name
     )
-
-//    val viewModel: AppViewModel = viewModel(factory = AppViewModel.Factory)
 
     Scaffold(
         topBar = {

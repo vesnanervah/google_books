@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.google_books.GoogleBooksApplication
-import com.example.google_books.data.MockVolumesRepository
 import com.example.google_books.data.VolumesRepository
 import com.example.google_books.model.Volume
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,8 +14,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class AppViewModel(): ViewModel() {
-    private val volumesRepository: VolumesRepository = MockVolumesRepository()
+class AppViewModel(
+    private val volumesRepository: VolumesRepository
+): ViewModel() {
     private val _uiState = MutableStateFlow(AppUiState())
     val uiState: StateFlow<AppUiState> = _uiState
 
@@ -79,14 +79,14 @@ class AppViewModel(): ViewModel() {
             }
         }
     }
-//
-//
-//    companion object {
-//        val Factory: ViewModelProvider.Factory = viewModelFactory {
-//            initializer {
-//                val application = (this[APPLICATION_KEY] as GoogleBooksApplication)
-//                AppViewModel(application.container.volumesRepository)
-//            }
-//        }
-//    }
+
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = this[APPLICATION_KEY] as GoogleBooksApplication
+                AppViewModel(application.container.volumesRepository)
+            }
+        }
+    }
 }
