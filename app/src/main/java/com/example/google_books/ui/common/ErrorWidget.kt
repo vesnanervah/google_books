@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ErrorWidget(text: String = "Something went wrong", modifier: Modifier = Modifier, onRetry: () -> Unit) {
-    Column(Modifier, Arrangement.Center, Alignment.CenterHorizontally) {
+    Column(modifier, Arrangement.Center, Alignment.CenterHorizontally) {
         Text(text)
         Spacer(Modifier.padding(vertical = 8.dp))
         Button(
