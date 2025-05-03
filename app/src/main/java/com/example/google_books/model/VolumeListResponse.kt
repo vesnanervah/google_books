@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class VolumeListResponse(
     val kind: String,
     val items: List<Volume>,
-    val totalCount: Int,
+    val totalItems: Int,
 )
