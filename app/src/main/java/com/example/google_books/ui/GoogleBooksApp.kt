@@ -24,9 +24,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.google_books.ui.screens.BookDetailsPage
 import com.example.google_books.ui.screens.BooksListPage
+import com.example.google_books.ui.screens.SearchScreen
 
 enum class GoogleBooksAppScreen {
-    BooksList, BooksDetails
+    Search, BooksList, BooksDetails
 }
 
 @Composable
@@ -37,12 +38,12 @@ fun GoogleBooksApp(
 ) {
     val backstackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = GoogleBooksAppScreen.valueOf(
-        backstackEntry?.destination?.route ?: GoogleBooksAppScreen.BooksList.name
+        backstackEntry?.destination?.route ?: GoogleBooksAppScreen.Search.name
     )
 
     Scaffold(
         topBar = {
-            GoogleBooksAppTopBar(canNavigateUp = currentScreen == GoogleBooksAppScreen.BooksDetails, finishApplication = finishApplication) {
+            GoogleBooksAppTopBar(canNavigateUp = currentScreen != GoogleBooksAppScreen.Search, finishApplication = finishApplication) {
                 navController.navigate(GoogleBooksAppScreen.BooksList.name)
             }
         }
@@ -53,13 +54,19 @@ fun GoogleBooksApp(
                 navController,
                 currentScreen.name,
             ) {
+                composable(GoogleBooksAppScreen.Search.name) {
+                    SearchScreen(Modifier.fillMaxSize()) {
+                        viewModel.getBooksList(it)
+                        navController.navigate(GoogleBooksAppScreen.BooksList.name)
+                    }
+                }
 
                 composable(GoogleBooksAppScreen.BooksList.name){
                     BooksListPage(
                         uiState.value.booksList,
                         uiState.value.booksListScreenState,
                         Modifier.fillMaxSize(),
-                        { viewModel.getBooksList() }
+                        { viewModel.getBooksList(uiState.value.searchString!!) }
                     ) {
                         viewModel.selectBook(it)
                         navController.navigate(GoogleBooksAppScreen.BooksDetails.name)

@@ -20,20 +20,18 @@ class AppViewModel(
     private val _uiState = MutableStateFlow(AppUiState())
     val uiState: StateFlow<AppUiState> = _uiState
 
-    init {
-        getBooksList()
-    }
-
-//    // TODO: pass query string
-     fun getBooksList() {
+     fun getBooksList(searchString: String) {
          loadData(
              {
                  _uiState.update {
-                     it.copy(booksListScreenState = ScreenState.Loading)
+                     it.copy(
+                         searchString =  searchString,
+                         booksListScreenState = ScreenState.Loading
+                     )
                  }
              },
              {
-                 val result: List<Volume> = volumesRepository.getVolumes("");
+                 val result: List<Volume> = volumesRepository.getVolumes(uiState.value.searchString!!);
                  _uiState.update {
                      it.copy(booksListScreenState = ScreenState.Success, booksList = result)
                  }
