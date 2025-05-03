@@ -43,8 +43,15 @@ fun GoogleBooksApp(
 
     Scaffold(
         topBar = {
-            GoogleBooksAppTopBar(canNavigateUp = currentScreen != GoogleBooksAppScreen.Search, finishApplication = finishApplication) {
-                navController.navigate(GoogleBooksAppScreen.BooksList.name)
+            GoogleBooksAppTopBar(
+                currentScreen.name,
+                finishApplication,
+                currentScreen != GoogleBooksAppScreen.Search,
+                ) {
+                val asArr = GoogleBooksAppScreen.entries.toTypedArray()
+                val currentIndex = asArr.indexOf(currentScreen)
+                val screen = asArr[currentIndex - 1].name
+                navController.navigate(screen)
             }
         }
     ) {
