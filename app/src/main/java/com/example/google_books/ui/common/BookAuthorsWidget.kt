@@ -6,12 +6,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun BookAuthorsWidget(authors: List<String?>?, modifier: Modifier = Modifier) {
+fun BookAuthorsWidget(authors: List<String?>?, modifier: Modifier = Modifier, prefix: String? = null) {
     if (authors.isNullOrEmpty()) {
         return
     }
     Text(
-        authors.joinToString(separator = ", "),
+        (prefix ?: "") + authors.joinToString(separator = ", "),
         modifier,
         style = MaterialTheme.typography.bodyMedium,
     )

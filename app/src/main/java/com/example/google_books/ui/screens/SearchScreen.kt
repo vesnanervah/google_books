@@ -15,20 +15,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun SearchScreen(modifier: Modifier = Modifier, onSearchSubmit: (search: String) -> Unit) {
     var value by remember { mutableStateOf("")  }
+    val focusRequester = remember { FocusRequester() }
     var showError by remember { mutableStateOf(false) }
 
     Column(modifier, Arrangement.Center, Alignment.CenterHorizontally) {
         TextField(
             value,
             { value = it },
+            Modifier.focusRequester(focusRequester),
             isError = showError,
-            maxLines = 1,
+            singleLine = true,
             placeholder = {
                 Text("Let's find some books!")
             },

@@ -1,5 +1,6 @@
 package com.example.google_books.ui.screens
 
+import android.text.Html
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,11 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.example.google_books.R
@@ -48,24 +47,28 @@ fun BookDetailsPage(
                     )
                 }
             }
-            Row(verticalAlignment = Alignment.Bottom) {
-                Text(book.volumeInfo.title, style = MaterialTheme.typography.titleLarge,)
-                if (book.volumeInfo.publishedDate != null) {
-                    Text(book.volumeInfo.publishedDate, Modifier.padding(start = 10.dp, bottom = 3.dp), style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Cursive))
-                }
+            Text(book.volumeInfo.title, Modifier.padding(top = 8.dp), style = MaterialTheme.typography.bodyLarge,)
+            if (book.volumeInfo.publishedDate != null){
+                BookCardSecondaryInfoRow(
+                    "Release date: ${book.volumeInfo.publishedDate}",
+                )
             }
-            BookAuthorsWidget(book.volumeInfo.authors, Modifier.padding(vertical = 4.dp))
+            BookAuthorsWidget(book.volumeInfo.authors, Modifier.padding(top = 8.dp), "Authors: ")
             if (book.volumeInfo.averageRating != null) {
-                BookCardSecondaryInfoText("Rating: ${book.volumeInfo.averageRating}")
+                BookCardSecondaryInfoRow("Rating: ${book.volumeInfo.averageRating}")
             }
             if (book.volumeInfo.description != null) {
-                BookCardSecondaryInfoText(book.volumeInfo.description)
+                BookCardSecondaryInfoRow(removeTagsFromString(book.volumeInfo.description))
             }
         }
     }
 }
 
 @Composable
-private fun BookCardSecondaryInfoText(text: String) {
-    Text(text, Modifier.padding(4.dp), style = MaterialTheme.typography.bodyMedium)
+private fun BookCardSecondaryInfoRow(text: String) {
+    Text(text, Modifier.padding(top = 8.dp), style = MaterialTheme.typography.bodyMedium)
+}
+
+private fun removeTagsFromString(text: String): String {
+    return Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT).toString()
 }
