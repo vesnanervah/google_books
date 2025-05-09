@@ -57,13 +57,14 @@ private fun BooksListItem(book: Volume, modifier: Modifier = Modifier, onBookTap
         Box {
             AsyncImage(
                 model = book.volumeInfo.imageLinks.thumbnail,
+                error = painterResource(R.drawable.placeholder),
                 contentDescription = "",
                 placeholder = painterResource(R.drawable.loading_img),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
-            Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.primary.copy(0.65F)).padding(8.dp)) {
-                Text(book.volumeInfo.title, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onPrimary)
+            Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background.copy(0.65F)).padding(8.dp)) {
+                Text(book.volumeInfo.title, style = MaterialTheme.typography.bodyLarge)
                 Spacer(Modifier.padding(top = 4.dp))
                 BookAuthorsWidget(book.volumeInfo.authors)
             }
