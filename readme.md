@@ -14,5 +14,4 @@ An application for easy books search via google books api
   3) Large layout
 
 ### Closest tasks:
-- Appbar should display user query string in search page and book title in details page
 - Partial loading in search results page

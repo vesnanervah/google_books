@@ -19,6 +19,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -43,11 +45,18 @@ fun GoogleBooksApp(
     val currentScreen = GoogleBooksAppScreen.valueOf(
         backstackEntry?.destination?.route ?: GoogleBooksAppScreen.Search.name
     )
+    val uiState = viewModel.uiState.collectAsState()
+
+    val appBarTitle = when (currentScreen) {
+        GoogleBooksAppScreen.Search -> "What are we looking for?"
+        GoogleBooksAppScreen.BooksList -> "Results: ${uiState.value.searchString}"
+        else -> uiState.value.bookDetails?.volumeInfo?.title ?: "Details"
+    }
 
     Scaffold(
         topBar = {
             GoogleBooksAppTopBar(
-                currentScreen.name,
+                appBarTitle,
                 finishApplication,
                 currentScreen != GoogleBooksAppScreen.Search,
                 ) {
@@ -59,7 +68,6 @@ fun GoogleBooksApp(
         }
     ) {
         innerPadding -> Surface(Modifier.padding(innerPadding)) {
-            val uiState = viewModel.uiState.collectAsState()
             NavHost(
                 navController,
                 currentScreen.name,
@@ -114,7 +122,7 @@ fun GoogleBooksAppTopBar(
         }
     }
     TopAppBar(
-        title = { Text(title) },
+        { Text(title, overflow = TextOverflow.Ellipsis, maxLines = 2) },
         navigationIcon = {
             if (canNavigateUp)
                 IconButton(onClick = navigateUp) {
