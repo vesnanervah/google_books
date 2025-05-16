@@ -34,50 +34,39 @@ import com.example.google_books.ui.common.ScreenStateResolverWidget
 fun BookDetailsPage(
     book: Volume?,
     modifier: Modifier = Modifier,
-    screenState: ScreenState,
-    onRetryAction: () -> Unit,
-
 ) {
-    ScreenStateResolverWidget(
-        screenState,
-        onRetryAction
-    ) {
-        Column(modifier.padding(8.dp)) {
-            if (book!!.volumeInfo.imageLinks.medium != null || book.volumeInfo.imageLinks.large != null) {
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                    AsyncImage(
-                        model = book.volumeInfo.imageLinks.large
-                            ?: book.volumeInfo.imageLinks.medium,
-                        contentDescription = "",
-                        placeholder = painterResource(R.drawable.loading_img),
-                        modifier = Modifier
-                            .height(340.dp),
-                        contentScale = ContentScale.FillHeight,
-                    )
-                }
+    Column(modifier.padding(8.dp)) {
+        if (book!!.volumeInfo.imageLinks.medium != null || book.volumeInfo.imageLinks.large != null) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                AsyncImage(
+                    model = book.volumeInfo.imageLinks.large
+                        ?: book.volumeInfo.imageLinks.medium,
+                    contentDescription = "",
+                    placeholder = painterResource(R.drawable.loading_img),
+                    modifier = Modifier
+                        .height(340.dp),
+                    contentScale = ContentScale.FillHeight,)
             }
-            Text(book.volumeInfo.title, Modifier.padding(top = 16.dp), style = MaterialTheme.typography.bodyLarge,)
-            if (book.volumeInfo.publishedDate != null){
-                BookCardSecondaryInfoRow(
-                    "Release date: ${book.volumeInfo.publishedDate}",
-                    Icons.Default.DateRange,
-                )
-            }
-            BookAuthorsWidget(
-                book.volumeInfo.authors,
-                Modifier.padding(top = 8.dp),
-                "Authors: ",
-                Icons.Default.Person,
-                )
-            if (book.volumeInfo.averageRating != null) {
-                BookCardSecondaryInfoRow(
-                    "Rating: ${book.volumeInfo.averageRating}",
-                    Icons.Default.Star,
-                )
-            }
-            if (book.volumeInfo.description != null) {
-                BookCardSecondaryInfoRow(removeTagsFromString(book.volumeInfo.description))
-            }
+        }
+        Text(book.volumeInfo.title, Modifier.padding(top = 16.dp), style = MaterialTheme.typography.bodyLarge,)
+        if (book.volumeInfo.publishedDate != null){
+            BookCardSecondaryInfoRow(
+                "Release date: ${book.volumeInfo.publishedDate}",
+                Icons.Default.DateRange,)
+        }
+        BookAuthorsWidget(
+            book.volumeInfo.authors,
+            Modifier.padding(top = 8.dp),
+            "Authors: ",
+            Icons.Default.Person,
+            )
+        if (book.volumeInfo.averageRating != null) {
+            BookCardSecondaryInfoRow(
+                "Rating: ${book.volumeInfo.averageRating}",
+                Icons.Default.Star,)
+        }
+        if (book.volumeInfo.description != null) {
+            BookCardSecondaryInfoRow(removeTagsFromString(book.volumeInfo.description))
         }
     }
 }

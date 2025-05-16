@@ -28,6 +28,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.google_books.ui.common.ScreenStateResolverWidget
 import com.example.google_books.ui.screens.BookDetailsPage
 import com.example.google_books.ui.screens.BooksListPage
 import com.example.google_books.ui.screens.SearchScreen
@@ -125,25 +126,33 @@ fun BooksAppCompactLayout(
              }
 
                 composable(BooksCompactAppScreen.BooksList.name){
-                    BooksListPage(
-                        uiState.value.booksList,
+                    ScreenStateResolverWidget(
                         uiState.value.booksListScreenState,
-                        Modifier.fillMaxSize(),
                         { viewModel.getBooksList(uiState.value.searchString!!) }
                     ) {
-                        viewModel.selectBook(it)
-                        navController.navigate(BooksCompactAppScreen.BooksDetails.name)
+                        BooksListPage(
+                            uiState.value.booksList,
+                            Modifier.fillMaxSize(),
+                        ) {
+                            viewModel.selectBook(it)
+                            navController.navigate(BooksCompactAppScreen.BooksDetails.name)
+                        }
                     }
                 }
 
                 composable(BooksCompactAppScreen.BooksDetails.name){
-                    BookDetailsPage(uiState.value.bookDetails,
-                        Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
-                        uiState.value.bookDetailsScreenState) {
-                        val id = uiState.value.bookDetails?.id
-                        if (id!= null) {
-                            viewModel.getBookDetails(id)
+                    ScreenStateResolverWidget(
+                        uiState.value.bookDetailsScreenState,
+                        {
+                            val id = uiState.value.bookDetails?.id
+                            if (id!= null) {
+                                viewModel.getBookDetails(id)
+                            }
                         }
+                    ) {
+                        BookDetailsPage(uiState.value.bookDetails,
+                            Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
+                        )
                     }
                 }
             }
@@ -194,21 +203,23 @@ fun BooksAppExpandedLayout(
             }
 
             composable(BooksExpandedAppScreen.ListAndDetails.name) {
-                Row {
-                    BooksListPage(
-                        uiState.value.booksList,
-                        uiState.value.booksListScreenState,
-                        Modifier.weight(2F),
-                        { viewModel.getBooksList(uiState.value.searchString!!) }
-                    ) {
-                        viewModel.selectBook(it)
-                    }
-                    BookDetailsPage(uiState.value.bookDetails,
-                        Modifier.weight(3F).verticalScroll(rememberScrollState()),
-                        uiState.value.bookDetailsScreenState) {
-                        val id = uiState.value.bookDetails?.id
-                        if (id!= null) {
-                            viewModel.getBookDetails(id)
+                ScreenStateResolverWidget(
+
+                    uiState.value.booksListScreenState,
+                    { viewModel.getBooksList(uiState.value.searchString!!) }
+                ) {
+                    Row {
+                        BooksListPage(
+                            uiState.value.booksList,
+                            Modifier.weight(2F),
+                        ) { viewModel.selectBook(it) }
+                        ScreenStateResolverWidget(uiState.value.bookDetailsScreenState, {
+                            val id = uiState.value.bookDetails?.id
+                            if (id!= null) {
+                                viewModel.getBookDetails(id)
+                            }
+                        } ){
+                            BookDetailsPage(uiState.value.bookDetails, Modifier.weight(3F).verticalScroll(rememberScrollState()))
                         }
                     }
                 }

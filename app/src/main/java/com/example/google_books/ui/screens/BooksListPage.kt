@@ -27,27 +27,19 @@ import com.example.google_books.data.MockVolumesRepository
 import com.example.google_books.model.Volume
 import com.example.google_books.ui.ScreenState
 import com.example.google_books.ui.common.BookAuthorsWidget
-import com.example.google_books.ui.common.ScreenStateResolverWidget
 
 @Composable
 fun BooksListPage(
-        books: List<Volume>,
-        screenState: ScreenState,
-        modifier: Modifier = Modifier,
-        onLoadRetry: () -> Unit,
-        onBookTap: (Volume) -> Unit,
-        ) {
-    ScreenStateResolverWidget(
-        screenState,
-        onLoadRetry,
+    books: List<Volume>,
+    modifier: Modifier = Modifier,
+    onBookTap: (Volume) -> Unit,
     ) {
-        if (books.isEmpty()) {
-            Text("There is no books")
-        } else {
-            LazyVerticalGrid(GridCells.Adaptive(150.dp), modifier) {
-                items(books) {
-                    BooksListItem(it, Modifier.height(200.dp), onBookTap)
-                }
+    if (books.isEmpty()) {
+        Text("There is no books")
+    } else {
+        LazyVerticalGrid(GridCells.Adaptive(150.dp), modifier) {
+            items(books) {
+                BooksListItem(it, Modifier.height(200.dp), onBookTap)
             }
         }
     }
@@ -79,14 +71,6 @@ private fun BooksListItem(book: Volume, modifier: Modifier = Modifier, onBookTap
                 BookAuthorsWidget(book.volumeInfo.authors)
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun BooksListPreview() {
-    BooksListPage(MockVolumesRepository.mockItemsList, ScreenState.Success, Modifier.fillMaxSize(), {}) {
-
     }
 }
 
