@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.google_books.GoogleBooksApplication
+import com.example.google_books.BooksApplication
 import com.example.google_books.data.VolumesRepository
 import com.example.google_books.model.Volume
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -82,7 +82,7 @@ class AppViewModel(
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val application = this[APPLICATION_KEY] as GoogleBooksApplication
+                val application = this[APPLICATION_KEY] as BooksApplication
                 AppViewModel(application.container.volumesRepository)
             }
         }
