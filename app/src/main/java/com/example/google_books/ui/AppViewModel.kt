@@ -31,7 +31,7 @@ class AppViewModel(
                  }
              },
              {
-                 val result: List<Volume> = volumesRepository.getVolumes(uiState.value.searchString!!);
+                 val result: List<Volume> = volumesRepository.getVolumes(uiState.value.searchString!!)
                  _uiState.update {
                      it.copy(booksListScreenState = ScreenState.Success, booksList = result)
                  }
@@ -65,6 +65,12 @@ class AppViewModel(
                 _uiState.update { it.copy(bookDetailsScreenState = ScreenState.Error) }
             }
         )
+    }
+
+    fun resetSelectedBook() {
+        _uiState.update {
+            it.copy(bookDetails = null, bookDetailsScreenState = ScreenState.Success)
+        }
     }
 
     private fun loadData(beforeLoadCb: () -> Unit, loadImpl: suspend () -> Unit, onErrorCb: () -> Unit) {

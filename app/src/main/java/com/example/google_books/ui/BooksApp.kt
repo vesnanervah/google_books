@@ -2,6 +2,7 @@ package com.example.google_books.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -50,6 +52,27 @@ fun BooksApp(
     when (windowSize) {
         WindowWidthSizeClass.Expanded -> BooksAppExpandedLayout(viewModel){ finishApplication() }
         else -> BooksAppCompactLayout(viewModel){ finishApplication() }
+    }
+}
+
+@Composable
+fun AppBasicLayout(
+        title: String = "Sample text",
+        finishApplication: () -> Unit,
+        canNavigateUp: Boolean,
+        navigateUp: () -> Unit,
+        navHostController: NavHostController,
+        startDestination: String,
+        navItems: NavGraphBuilder.() -> Unit
+    ) {
+    Scaffold(
+        topBar = { GoogleBooksAppTopBar(title, finishApplication, canNavigateUp, navigateUp) }
+    ) {
+        Surface(Modifier.padding(it)) {
+            NavHost(navHostController, startDestination) {
+                navItems()
+            }
+        }
     }
 }
 
@@ -99,62 +122,59 @@ fun BooksAppCompactLayout(
         BooksCompactAppScreen.BooksList -> "Results: ${uiState.value.searchString}"
         else -> uiState.value.bookDetails?.volumeInfo?.title ?: "Details"
     }
+    val canNavigateUp = currentScreen != BooksCompactAppScreen.Search
 
-    Scaffold(
-        topBar = {
-            GoogleBooksAppTopBar(
-                appBarTitle,
-                finishApplication,
-                currentScreen != BooksCompactAppScreen.Search,
-            ) {
-                val asArr = BooksCompactAppScreen.entries.toTypedArray()
-                val currentIndex = asArr.indexOf(currentScreen)
-                val screen = asArr[currentIndex - 1].name
-                navController.navigate(screen)
+    AppBasicLayout(
+        appBarTitle,
+        finishApplication,
+        canNavigateUp,
+        {
+            val asArr = BooksCompactAppScreen.entries.toTypedArray()
+            val currentIndex = asArr.indexOf(currentScreen)
+            val screen = asArr[currentIndex - 1].name
+            navController.navigate(screen)
+        },
+        navController,
+        currentScreen.name
+    ) {
+        composable(BooksCompactAppScreen.Search.name) {
+            SearchScreen(Modifier.fillMaxSize()) {
+                viewModel.getBooksList(it)
+                navController.navigate(BooksCompactAppScreen.BooksList.name)
             }
         }
-    ) { innerPadding -> Surface(Modifier.padding(innerPadding)) {
-        NavHost(
-            navController,
-            currentScreen.name,
-        ) {
-             composable(BooksCompactAppScreen.Search.name) {
-                    SearchScreen(Modifier.fillMaxSize()) {
-                        viewModel.getBooksList(it)
-                        navController.navigate(BooksCompactAppScreen.BooksList.name)
-                    }
-             }
 
-                composable(BooksCompactAppScreen.BooksList.name){
-                    ScreenStateResolverWidget(
-                        uiState.value.booksListScreenState,
-                        { viewModel.getBooksList(uiState.value.searchString!!) }
-                    ) {
-                        BooksListPage(
-                            uiState.value.booksList,
-                            Modifier.fillMaxSize(),
-                        ) {
-                            viewModel.selectBook(it)
-                            navController.navigate(BooksCompactAppScreen.BooksDetails.name)
-                        }
+        composable(BooksCompactAppScreen.BooksList.name) {
+            ScreenStateResolverWidget(
+                uiState.value.booksListScreenState,
+                Modifier.fillMaxSize(),
+                { viewModel.getBooksList(uiState.value.searchString!!) }
+            ) {
+                BooksListPage(
+                    uiState.value.booksList,
+                    Modifier.fillMaxSize(),
+                ) {
+                    viewModel.selectBook(it)
+                    navController.navigate(BooksCompactAppScreen.BooksDetails.name)
+                }
+            }
+        }
+
+        composable(BooksCompactAppScreen.BooksDetails.name) {
+            ScreenStateResolverWidget(
+                uiState.value.bookDetailsScreenState,
+                Modifier.fillMaxSize(),
+                {
+                    val id = uiState.value.bookDetails?.id
+                    if (id!= null) {
+                        viewModel.getBookDetails(id)
                     }
                 }
-
-                composable(BooksCompactAppScreen.BooksDetails.name){
-                    ScreenStateResolverWidget(
-                        uiState.value.bookDetailsScreenState,
-                        {
-                            val id = uiState.value.bookDetails?.id
-                            if (id!= null) {
-                                viewModel.getBookDetails(id)
-                            }
-                        }
-                    ) {
-                        BookDetailsPage(uiState.value.bookDetails,
-                            Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
-                        )
-                    }
-                }
+            ) {
+                BookDetailsPage(
+                    uiState.value.bookDetails,
+                    Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
+                )
             }
         }
     }
@@ -174,58 +194,58 @@ fun BooksAppExpandedLayout(
 
     val appBarTitle = when (currentScreen) {
         BooksExpandedAppScreen.Search -> "What are we looking for?"
-        else -> "Results"
+        else -> "Results: ${uiState.value.searchString}"
     }
+    val canNavigateUp = currentScreen != BooksExpandedAppScreen.Search
 
-    Scaffold(
-        topBar = {
-            GoogleBooksAppTopBar(
-                appBarTitle,
-                finishApplication,
-                currentScreen != BooksExpandedAppScreen.Search,
-            ) {
-                val asArr = BooksExpandedAppScreen.entries.toTypedArray()
-                val currentIndex = asArr.indexOf(currentScreen)
-                val screen = asArr[currentIndex - 1].name
-                navController.navigate(screen)
+
+    AppBasicLayout(
+        appBarTitle,
+        finishApplication,
+        canNavigateUp,
+        {
+            if (uiState.value.bookDetails != null) {
+                viewModel.resetSelectedBook()
+            } else {
+                navController.navigate(BooksExpandedAppScreen.Search.name)
+            }
+        },
+        navController,
+        currentScreen.name
+    ) {
+        composable(BooksExpandedAppScreen.Search.name) {
+            SearchScreen(Modifier.fillMaxSize()) {
+                viewModel.getBooksList(it)
+                navController.navigate(BooksExpandedAppScreen.ListAndDetails.name)
             }
         }
-    ) { innerPadding -> Surface(Modifier.padding(innerPadding)) {
-        NavHost(
-            navController,
-            currentScreen.name,
-        ) {
-            composable(BooksExpandedAppScreen.Search.name) {
-                SearchScreen(Modifier.fillMaxSize()) {
-                    viewModel.getBooksList(it)
-                    navController.navigate(BooksExpandedAppScreen.ListAndDetails.name)
-                }
-            }
-
-            composable(BooksExpandedAppScreen.ListAndDetails.name) {
-                ScreenStateResolverWidget(
-
-                    uiState.value.booksListScreenState,
-                    { viewModel.getBooksList(uiState.value.searchString!!) }
-                ) {
-                    Row {
-                        BooksListPage(
-                            uiState.value.booksList,
-                            Modifier.weight(2F),
-                        ) { viewModel.selectBook(it) }
-                        ScreenStateResolverWidget(uiState.value.bookDetailsScreenState, {
-                            val id = uiState.value.bookDetails?.id
-                            if (id!= null) {
-                                viewModel.getBookDetails(id)
-                            }
-                        } ){
+        composable(BooksExpandedAppScreen.ListAndDetails.name) {
+            ScreenStateResolverWidget(
+                uiState.value.booksListScreenState,
+                Modifier.fillMaxSize(),
+                { viewModel.getBooksList(uiState.value.searchString!!) }
+            ) {
+                Row {
+                    BooksListPage(
+                        uiState.value.booksList,
+                        Modifier.weight(1F),
+                    ) { viewModel.selectBook(it) }
+                    if (uiState.value.bookDetails != null) {
+                        ScreenStateResolverWidget(
+                            uiState.value.bookDetailsScreenState,
+                            Modifier.weight(3F).fillMaxHeight(),
+                            {
+                                val id = uiState.value.bookDetails?.id
+                                if (id!= null) {
+                                    viewModel.getBookDetails(id)
+                                }
+                            } ){
                             BookDetailsPage(uiState.value.bookDetails, Modifier.weight(3F).verticalScroll(rememberScrollState()))
                         }
                     }
                 }
             }
         }
-    }
     }
 }
 

@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ErrorWidget(text: String = "Something went wrong", modifier: Modifier = Modifier, onRetry: () -> Unit) {
+fun ErrorWidget(modifier: Modifier = Modifier, text: String = "Something went wrong", onRetry: () -> Unit) {
     Column(modifier, Arrangement.Center, Alignment.CenterHorizontally) {
         Text(text)
         Spacer(Modifier.padding(vertical = 8.dp))
