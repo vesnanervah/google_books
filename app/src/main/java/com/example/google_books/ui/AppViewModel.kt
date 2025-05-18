@@ -24,10 +24,7 @@ class AppViewModel(
          loadData(
              {
                  _uiState.update {
-                     it.copy(
-                         searchString =  searchString,
-                         booksListScreenState = ScreenState.Loading
-                     )
+                     it.copy(searchString =  searchString, booksListScreenState = ScreenState.Loading)
                  }
              },
              {
@@ -38,8 +35,7 @@ class AppViewModel(
              },
              {
                  _uiState.update {
-                     it.copy(booksListScreenState = ScreenState.Error, booksList = emptyList(),
-                     )
+                     it.copy(booksListScreenState = ScreenState.Error, booksList = emptyList())
                  }
              }
          )

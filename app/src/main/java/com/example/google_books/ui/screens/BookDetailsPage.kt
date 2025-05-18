@@ -1,6 +1,5 @@
 package com.example.google_books.ui.screens
 
-import android.graphics.drawable.VectorDrawable
 import android.text.Html
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,9 +25,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.example.google_books.R
 import com.example.google_books.model.Volume
-import com.example.google_books.ui.ScreenState
 import com.example.google_books.ui.common.BookAuthorsWidget
-import com.example.google_books.ui.common.ScreenStateResolverWidget
 
 @Composable
 fun BookDetailsPage(

@@ -50,8 +50,8 @@ fun BooksApp(
     finishApplication: () -> Unit,
 ) {
     when (windowSize) {
-        WindowWidthSizeClass.Expanded -> BooksAppExpandedLayout(viewModel){ finishApplication() }
-        else -> BooksAppCompactLayout(viewModel){ finishApplication() }
+        WindowWidthSizeClass.Expanded -> BooksAppExpandedLayout(viewModel) { finishApplication() }
+        else -> BooksAppCompactLayout(viewModel) { finishApplication() }
     }
 }
 
@@ -66,7 +66,7 @@ fun AppBasicLayout(
         navItems: NavGraphBuilder.() -> Unit
     ) {
     Scaffold(
-        topBar = { GoogleBooksAppTopBar(title, finishApplication, canNavigateUp, navigateUp) }
+        topBar = { BooksAppTopBar(title, finishApplication, canNavigateUp, navigateUp) }
     ) {
         Surface(Modifier.padding(it)) {
             NavHost(navHostController, startDestination) {
@@ -78,7 +78,7 @@ fun AppBasicLayout(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GoogleBooksAppTopBar(
+fun BooksAppTopBar(
     title: String = "Sample text",
     finishApplication: () -> Unit,
     canNavigateUp: Boolean,

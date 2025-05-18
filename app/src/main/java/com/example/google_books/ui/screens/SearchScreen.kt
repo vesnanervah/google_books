@@ -43,10 +43,9 @@ fun SearchScreen(modifier: Modifier = Modifier, onSearchSubmit: (search: String)
                     Text("Try search something else")
                 }
             },
-            keyboardActions = KeyboardActions(onDone = {
-                submit(value, focusManager, { showError = true }, onSearchSubmit)
-            }),
-
+            keyboardActions = KeyboardActions(
+                onDone = { submit(value, focusManager, { showError = true }, onSearchSubmit) }
+            ),
         )
         Spacer(Modifier.padding(8.dp))
         Button({
@@ -63,13 +62,5 @@ private fun submit( value: String, focusManager: FocusManager, onErrorOccured: (
         onErrorOccured()
     } else {
         onSearchSubmit(value)
-    }
-}
-
-@Preview
-@Composable
-fun SearchScreenPreview() {
-    SearchScreen(Modifier.fillMaxSize()) {
-
     }
 }

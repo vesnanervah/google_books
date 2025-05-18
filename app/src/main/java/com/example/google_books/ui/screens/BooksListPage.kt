@@ -19,13 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.example.google_books.R
-import com.example.google_books.data.MockVolumesRepository
 import com.example.google_books.model.Volume
-import com.example.google_books.ui.ScreenState
 import com.example.google_books.ui.common.BookAuthorsWidget
 
 @Composable
